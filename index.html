@@ -3,10 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>OKO</title>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>OKO</h1>
+    <div class="site">
+        <h1>OKO</h1>
+        <button type="button" value="Reset" onclick="reset()">reset</button>
+    </div>
+    <div class="game">
+        <div class="bet">
+                <label for="bet">How much do you want to bet?</label>
+                <input type="number" name="bet" id="bet-field" autofocus>
+                <button type="button" id="bet-button">bet</button>
+        </div>
+        <div class="balance">
+            <div>Current balance: </div>
+            <div id="curr-balance">0</div>
+        </div>
+        <div class="sum">
+            <div>Current card value sum:</div>
+            <div id="player-sum">0</div>
+        </div>
+        <div class="buttons">
+            <button id="hit-button">hit</button>
+            <button id="stay-button">stay</button>
+        </div>
+    </div>
 </body>
 </html>
