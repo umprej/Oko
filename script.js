@@ -8,6 +8,39 @@ class Card {
         this.rank = rank;
         this.value = value;
     }
+
+    //předem se omlouvám za tenhle přístup raději než nadefinovat si seznam všech karet
+    //až moc pozdě jsem si uvědomil bolesti českého skloňování
+    toString() {
+        let retStr = "";
+
+        if (this.suit == "kule") {
+            retStr += "kulov";
+        }
+        else if (this.suit == "listy") {
+            retStr += "listov";
+        }
+        else if (this.suit == "žaludy") {
+            retStr += "žaludsk";
+        }
+        else {
+            retStr += "srdcov";
+        }
+
+        if (this.value < 3) {
+            retStr += "ý";
+        }
+        else if (this.value < 11) {
+            retStr += "á"
+        }
+        else {
+            retStr += "é"
+        }
+
+        retStr += " " + this.rank;
+
+        return retStr;
+    }
 }
 
 class Deck {
@@ -27,7 +60,7 @@ class Deck {
 
     print() {
         this.ordered.forEach(card => {
-            console.log(card);
+            console.log(card.toString);
         })
     }
 
@@ -115,21 +148,20 @@ class Game {
             let retStr = "";
             let n = cards.length;
             for (let i = 0; i < n - 1; i++) {
-                retStr += cards[i].suit + " " + cards[i].rank + ", ";
+                retStr += cards[i].toString() + ", ";
             }
 
             if (n != 0) {
-                retStr += cards[n - 1].suit + " " + cards[n - 1].rank;
+                retStr += cards[n - 1].toString();
             }
 
             return retStr;
         }
 
-        alert(`${resultStr}\n
-               Your score is ${this.playerScore}, bot scored ${this.botScore}\n
-               You cards: ${cardsToString(this.playerCards)}\n
-               Bot cards: ${cardsToString(this.botCards)}\n
-               `);
+        alert(`${resultStr}\n` +
+              `Your score is ${this.playerScore}, bot scored ${this.botScore}\n` +
+              `You cards: ${cardsToString(this.playerCards)}\n` +
+              `Bot cards: ${cardsToString(this.botCards)}\n`);
         console.log(this.playerBalance);
     }
 
