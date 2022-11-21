@@ -1,4 +1,57 @@
 const VALUES = [1, 1, 2, 7, 8, 9, 10, 11];
+const SUIT = ["kule", "listy", "žaludy", "srdce"];
+const RANK = ["svršek", "spodek", "král", "sedma", "osmička", "devítka", "desítka", "eso"];
+
+class Card {
+    constructor(suit, rank, value) {
+        this.suit = suit;
+        this.rank = rank;
+        this.value = value;
+    }
+}
+
+class Deck {
+    constructor() {
+        this.ordered = [];
+        this.shuffled = [];
+
+        //generate ordered deck
+        SUIT.forEach(suit => {
+            let i = 0;
+            RANK.forEach(rank => {
+                this.ordered.push(new Card(suit, rank, VALUES[i]));
+                i++;
+            })
+        });
+    }
+
+    print() {
+        this.ordered.forEach(card => {
+            console.log(card);
+        })
+    }
+
+    shuffle() {
+        //uses the Fisher-Yates shuffle algorhitm
+        //traverse array &
+        //swap element at current position with random one not yet visited
+        this.shuffled = this.ordered;
+        for(let i = this.ordered.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+
+            let tmpSwap = this.shuffled[i];
+            this.shuffled[i] = this.shuffled[j];
+            this.shuffled[j] = tmpSwap;
+        }
+    }
+
+    dealCard() {
+        if (this.shuffled.length == 0) {
+            this.shuffle();
+        }
+        return this.shuffled.pop();
+    }
+}
 
 function resetElems() {
     document.querySelectorAll('div.resetable').forEach(elem =>
@@ -12,28 +65,22 @@ function resetElems() {
     }
 }
 
-function dealCard() {
-    return VALUES[Math.floor(Math.random() * VALUES.length)];
-}
-
-function botPlay() {
-    let sum = dealCard();
-    while (sum < 17) {
-        sum += dealCard();
-    }
-    return sum;
-}
-
 class Game {
     constructor(playerBalance) {
         this.playerBalance = playerBalance;
         this.playerScore = 0;
         this.botScore = 0;
         this.currBet = 0;
+
+        this.deck = new Deck();
+        this.playerCards = [];
+        this.botCards = [];
     }
 
     hit() {
-        this.playerScore += dealCard();
+        let card = this.deck.dealCard();
+        this.playerCards.push(card);
+        this.playerScore += card.value;
         document.querySelector('#player-sum').textContent = this.playerScore;
 
         if(this.playerScore > 21) {
@@ -42,7 +89,7 @@ class Game {
     }
 
     stay() {
-        this.botScore = botPlay();
+        this.botScore = this.botPlay();
         let resultStr = "";
         if (this.playerScore > 21) {
             resultStr = "You went bust!"
@@ -59,9 +106,31 @@ class Game {
         else {
             resultStr = "You've tied."
         }
-        alert(`${resultStr}\nYour score is ${this.playerScore}, bot scored ${this.botScore}`);
-        console.log(this.playerBalance);
+        this.alertRoundResult(resultStr);
         this.nextRound();
+    }
+
+    alertRoundResult(resultStr) {
+        function cardsToString(cards) {
+            let retStr = "";
+            let n = cards.length;
+            for (let i = 0; i < n - 1; i++) {
+                retStr += cards[i].suit + " " + cards[i].rank + ", ";
+            }
+
+            if (n != 0) {
+                retStr += cards[n - 1].suit + " " + cards[n - 1].rank;
+            }
+
+            return retStr;
+        }
+
+        alert(`${resultStr}\n
+               Your score is ${this.playerScore}, bot scored ${this.botScore}\n
+               You cards: ${cardsToString(this.playerCards)}\n
+               Bot cards: ${cardsToString(this.botCards)}\n
+               `);
+        console.log(this.playerBalance);
     }
 
     nextRound() {
@@ -79,6 +148,18 @@ class Game {
         toggleBetPlayButtons();
         document.querySelector('#bet-field').focus();
 
+    }
+
+    botPlay() {
+        let card = this.deck.dealCard();
+        let sum = card.value;
+        this.botCards.push(card);
+        while (sum < 17) {
+            card = this.deck.dealCard();
+            this.botCards.push(card);
+            sum += card.value;
+        }
+        return sum;
     }
 }
 
@@ -110,7 +191,7 @@ function toggleDisplay(elem) {
 
 function game() {
     let game = new Game();
-
+    
     let buyInButton = document.querySelector('#buy-in-button');
     let betButton = document.querySelector('#bet-button');
     let hitButton = document.querySelector('#hit-button');
