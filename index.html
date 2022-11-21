@@ -9,25 +9,36 @@
 <body>
     <div class="site">
         <h1>OKO</h1>
-        <button type="button" value="Reset" onclick="reset()">reset</button>
+        <button id="reset-button">reset</button>
     </div>
     <div class="game">
-        <div class="bet">
-                <label for="bet">How much do you want to bet?</label>
-                <input type="number" name="bet" id="bet-field" autofocus>
-                <button type="button" id="bet-button">bet</button>
+        <div class="buy-in">
+            <label for="buy-in">How much do you want to gamble away today?</label>
+            <input type="number" name="buy-in" id="buy-in-field" class="resetable" autofocus>
+            <button type="button" id="buy-in-button">start the game</button>
         </div>
-        <div class="balance">
-            <div>Current balance: </div>
-            <div id="curr-balance">0</div>
-        </div>
-        <div class="sum">
-            <div>Current card value sum:</div>
-            <div id="player-sum">0</div>
-        </div>
-        <div class="buttons">
-            <button id="hit-button">hit</button>
-            <button id="stay-button">stay</button>
+        <div class="playing" style="display: none">
+            <div class="balance">
+                <div>Current balance: </div>
+                <div id="curr-balance" class="resetable">0</div>
+            </div>
+            <div class="round">
+                <div class="bet">
+                        <label for="bet">How much do you want to bet?</label>
+                        <input type="number" name="bet" id="bet-field" class="resetable" autofocus>
+                        <button type="button" id="bet-button">bet</button>
+                        <div>Current bet:</div>
+                        <div id="curr-bet" class="resetable">0</div>
+                </div>
+                <div class="sum">
+                    <div>Current card value sum:</div>
+                    <div id="player-sum" class="resetable">0</div>
+                </div>
+                <div class="play-buttons">
+                    <button id="hit-button">hit</button>
+                    <button id="stay-button">stay</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
