@@ -1,0 +1,9 @@
+body, .bet, .buy-in, .playing {
+    margin: auto;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: rgb(255, 252, 238);
+}
