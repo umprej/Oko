@@ -1,8 +1,15 @@
 const VALUES = [1, 1, 2, 7, 8, 9, 10, 11];
+
 function resetElems() {
     document.querySelectorAll('div.resetable').forEach(elem =>
         elem.textContent = 0);
     document.querySelector('#bet-field').value = 1;
+    document.querySelector('#buy-in-field').value = 10;
+    
+    if (document.querySelector('.buy-in').style.display == 'none') {
+        toggleDisplay(document.querySelector('.buy-in'));
+        toggleDisplay(document.querySelector('.playing'));
+    }
 }
 
 function dealCard() {
@@ -70,6 +77,8 @@ class Game {
         });
 
         toggleBetPlayButtons();
+        document.querySelector('#bet-field').focus();
+
     }
 }
 
@@ -114,7 +123,12 @@ function game() {
     //buy in
     buyInButton.addEventListener('click', (event) => {
         let buyInField = document.querySelector('#buy-in-field');
-        game.playerBalance = parseInt(buyInField.value);
+        let buyInInput = parseInt(buyInField.value);
+        if (Number.isNaN(buyInInput) || buyInInput < 10) {
+            alert("Please enter a numberic bet above 10.")
+            return;
+        }
+        game.playerBalance = buyInInput;
         document.querySelector('#curr-balance').textContent = game.playerBalance;
         toggleDisplay(document.querySelector('.buy-in'));
         toggleDisplay(document.querySelector('.playing'));
@@ -123,7 +137,12 @@ function game() {
     //bet
     betButton.addEventListener('click', (event) => {
         let betField = document.querySelector('#bet-field');
-        game.currBet = parseInt(betField.value);
+        let betInput = parseInt(betField.value);
+        if (Number.isNaN(betInput) || betInput < 1 || betInput > game.playerBalance) {
+            alert("Please enter a numeric bet above 1 that you can afford.")
+            return;
+        }
+        game.currBet = betInput;
         document.querySelector('#curr-bet').textContent = game.currBet;
         toggleBetPlayButtons();
         game.hit();
@@ -143,8 +162,7 @@ function game() {
     resetButton.addEventListener('click', (event) => {
         resetElems();
         game = new Game();
-        document.querySelectorAll('.bet').forEach(elem => toggleDisplay(elem));
-    })
+        })
 
 
 }
