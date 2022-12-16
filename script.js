@@ -172,6 +172,8 @@ class Game {
     nextRound() {
         if (this.playerBalance <= 0) {
             this.livesLeft--;
+            let healthBar = document.querySelector("#healthbar");
+            updateBar(healthBar, this.livesLeft);
             if (this.livesLeft > 0) {
                 alert(`You're out of money!\n` +
                 `You have ${this.livesLeft} lives remaining.\n`);
@@ -240,6 +242,35 @@ function toggleDisplay(elem) {
     }
 }
 
+function drawHeart(ctx, x, y, size, color) {
+    ctx.beginPath();
+    ctx.fillStyle = color;
+
+    let arcRadius = size / 4;
+    ctx.arc(x - arcRadius, y, arcRadius, 0, Math.PI, true);
+    ctx.arc(x + arcRadius, y, arcRadius, 0, Math.PI, true)
+    ctx.moveTo(x + arcRadius * 2, y)
+    ctx.lineTo(x, y + (arcRadius) * 2.8);
+    ctx.lineTo(x - arcRadius * 2, y);
+    ctx.closePath();
+    ctx.fill();
+}
+
+function updateBar(bar, heartCount) {
+
+    ctx = bar.getContext("2d");
+    ctx.clearRect(0, 0, bar.width, bar.height);
+
+    let heartSize = bar.height / 2 + 10;
+    let gapSize = heartSize / 3;
+    let x = (bar.width - (heartCount * heartSize + (heartCount - 1) * gapSize) + heartSize) / 2;
+
+    for (let i = 0; i < heartCount; i++) {
+        drawHeart(ctx, x, bar.height / 3, heartSize, "red");
+        x += heartSize + gapSize;
+    }
+}
+
 function game() {
     let game = new Game();
     
@@ -251,6 +282,9 @@ function game() {
 
     hitButton.setAttribute('disabled', '');
     stayButton.setAttribute('disabled', '');
+
+    let healthBar = document.querySelector("#healthbar");
+    updateBar(healthBar, game.livesLeft);
 
     //buy in
     buyInButton.addEventListener('click', (event) => {
@@ -296,8 +330,6 @@ function game() {
         resetElems();
         game = new Game();
         })
-
-
 }
 
 game()
