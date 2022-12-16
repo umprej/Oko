@@ -187,6 +187,10 @@ class Game {
         document.querySelector('#lives').textContent = this.livesLeft;
         document.querySelector('#curr-balance').textContent = this.playerBalance;
 
+        //reset counter vars for next round
+        this.deck.shuffle();
+        this.playerCards = [];
+        this.botCards = [];
         this.playerScore = 0;
         this.botScore = 0;
         document.querySelectorAll('.round .resetable').forEach(elem => {
