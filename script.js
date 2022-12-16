@@ -99,8 +99,11 @@ function resetElems() {
 }
 
 class Game {
-    constructor(playerBalance) {
-        this.playerBalance = playerBalance;
+    constructor() {
+        this.initialBet = 0;
+        this.playerBalance = 0;
+        this.livesLeft = 3;
+
         this.playerScore = 0;
         this.botScore = 0;
         this.currBet = 0;
@@ -139,6 +142,7 @@ class Game {
         else {
             resultStr = "You've tied."
         }
+
         this.alertRoundResult(resultStr);
         this.nextRound();
     }
@@ -167,10 +171,22 @@ class Game {
 
     nextRound() {
         if (this.playerBalance <= 0) {
-            alert("You're out of money!");
+            this.livesLeft--;
+            if (this.livesLeft > 0) {
+                alert(`You're out of money!\n` +
+                `You have ${this.livesLeft} lives remaining.\n`);
+                this.playerBalance = this.initialBet;
+            }
+            else {
+                alert(`You're out of money and lives!\n` +
+                `Please reset the game if you want to play again.\n`);
+            }
         }
         
+
+        document.querySelector('#lives').textContent = this.livesLeft;
         document.querySelector('#curr-balance').textContent = this.playerBalance;
+
         this.playerScore = 0;
         this.botScore = 0;
         document.querySelectorAll('.round .resetable').forEach(elem => {
@@ -179,7 +195,6 @@ class Game {
 
         toggleBetPlayButtons();
         document.querySelector('#bet-field').focus();
-
     }
 
     botPlay() {
@@ -242,6 +257,7 @@ function game() {
             return;
         }
         game.playerBalance = buyInInput;
+        game.initialBet = buyInInput;
         document.querySelector('#curr-balance').textContent = game.playerBalance;
         toggleDisplay(document.querySelector('.buy-in'));
         toggleDisplay(document.querySelector('.playing'));
