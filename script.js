@@ -87,15 +87,7 @@ class Deck {
 }
 
 function resetElems() {
-    document.querySelectorAll('div.resetable').forEach(elem =>
-        elem.textContent = 0);
-    document.querySelector('#bet-field').value = 1;
-    document.querySelector('#buy-in-field').value = 10;
-    
-    if (document.querySelector('.buy-in').style.display == 'none') {
-        toggleDisplay(document.querySelector('.buy-in'));
-        toggleDisplay(document.querySelector('.playing'));
-    }
+
 }
 
 function cardsToString(cards) {
@@ -328,9 +320,22 @@ function game() {
 
     //reset
     resetButton.addEventListener('click', (event) => {
-        resetElems();
+        document.querySelectorAll('div.resetable').forEach(elem =>
+            elem.textContent = 0);
+
+        document.querySelector('#bet-field').value = 1;
+        document.querySelector('#buy-in-field').value = 10;
+        
+        if (document.querySelector('.buy-in').style.display == 'none') {
+            toggleDisplay(document.querySelector('.buy-in'));
+            toggleDisplay(document.querySelector('.playing'));
+        }
+
         game = new Game();
-        })
+
+        let healthBar = document.querySelector("#healthbar");
+        updateBar(healthBar, game.livesLeft);
+    });
 }
 
 game()
