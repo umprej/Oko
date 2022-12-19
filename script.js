@@ -282,15 +282,16 @@ function updateBar(bar, heartCount) {
     ctx.clearRect(0, 0, bar.width, bar.height);
 
     let heartSize = bar.height / 2 + 10;
-    let gapSize = heartSize / 3;
-    let x = (bar.width - (heartCount * heartSize + (heartCount - 1) * gapSize) + heartSize) / 2;
+    if (heartCount > 0) {
+        let gapSize = heartSize / 3;
+        let x = (bar.width - (heartCount * heartSize + (heartCount - 1) * gapSize) + heartSize) / 2;
 
-    for (let i = 0; i < heartCount; i++) {
-        drawHeart(ctx, x, bar.height / 3, heartSize, "red");
-        x += heartSize + gapSize;
+        for (let i = 0; i < heartCount; i++) {
+            drawHeart(ctx, x, bar.height / 3, heartSize, "red");
+            x += heartSize + gapSize;
+        }
     }
-
-    if (heartCount == 0) {
+    else {
         drawSadFace(ctx, bar.width / 2, bar.height / 3, heartSize, "black");
     }
 }
