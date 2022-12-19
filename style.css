@@ -24,3 +24,18 @@ body, .bet, .buy-in, .playing, .round, .sum, .cards {
 .round, .buy-in {
     gap: 5px
 }
+
+button, input {
+    min-width: 50px;
+    border-radius: 0.2rem;
+    border:  .15rem solid black;
+    transition-duration: 0.3s;
+    font-family: 'Courier New', Courier, monospace;
+
+}
+
+button:hover:not([disabled]) {
+    background-color: #bbbbbb;
+    transform: scale(1.1);
+    cursor: pointer;
+}
