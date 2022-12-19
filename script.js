@@ -241,12 +241,27 @@ function drawHeart(ctx, x, y, size, color) {
 
     let arcRadius = size / 4;
     ctx.arc(x - arcRadius, y, arcRadius, 0, Math.PI, true);
-    ctx.arc(x + arcRadius, y, arcRadius, 0, Math.PI, true)
-    ctx.moveTo(x + arcRadius * 2, y)
+    ctx.arc(x + arcRadius, y, arcRadius, 0, Math.PI, true);
+    ctx.moveTo(x + arcRadius * 2, y);
     ctx.lineTo(x, y + (arcRadius) * 2.8);
     ctx.lineTo(x - arcRadius * 2, y);
     ctx.closePath();
     ctx.fill();
+}
+
+function drawSadFace(ctx, x, y, size, color) {
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    let arcRadius = size / 4;
+    ctx.arc(x - size / 2, y, arcRadius, 0, 2 * Math.PI, true);
+    ctx.arc(x + size / 2, y, arcRadius, 0, 2 * Math.PI, true);
+    ctx.fill();
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(x, y + size / 1.6, arcRadius, 0, -1 * Math.PI, true);
+    ctx.stroke();
 }
 
 function updateBar(bar, heartCount) {
@@ -261,6 +276,10 @@ function updateBar(bar, heartCount) {
     for (let i = 0; i < heartCount; i++) {
         drawHeart(ctx, x, bar.height / 3, heartSize, "red");
         x += heartSize + gapSize;
+    }
+
+    if (heartCount == 0) {
+        drawSadFace(ctx, bar.width / 2, bar.height / 3, heartSize, "black");
     }
 }
 
