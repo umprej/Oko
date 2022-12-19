@@ -156,20 +156,20 @@ class Game {
 
         let resultStr = "";
         if (this.playerCards.sum > 21) {
-            resultStr = "You went bust!"
+            resultStr = "Součet je přes 21, prohrál jste!"
             this.playerBalance = this.playerBalance - this.currBet;
         }
         else if (this.playerCards.sum > this.botCards.sum
                  || this.botCards.sum > 21) {
-            resultStr = "YOU WIN!!!";
+            resultStr = "VÝHRA!!!";
             this.playerBalance = this.playerBalance + this.currBet;
         }
         else if (this.playerCards.sum < this.botCards.sum) {
-            resultStr = "You lost...";
+            resultStr = "Prohrál jste...";
             this.playerBalance = this.playerBalance - this.currBet;
         }
         else {
-            resultStr = "You've tied."
+            resultStr = "Stejné součty, sázky se vrací."
         }
 
         this.alertRoundResult(resultStr);
@@ -178,9 +178,9 @@ class Game {
 
     alertRoundResult(resultStr) {
         alert(`${resultStr}\n` +
-              `Your score is ${this.playerCards.sum}, bot scored ${this.botCards.sum}\n` +
-              `You cards: ${this.playerCards.toString()}\n` +
-              `Bot cards: ${this.botCards.toString()}\n`);
+              `Váš součet je ${this.playerCards.sum}, počítač měl ${this.botCards.sum}\n` +
+              `Vaše karty: ${this.playerCards.toString()}\n` +
+              `Počítače karty: ${this.botCards.toString()}\n`);
     }
 
     nextRound() {
@@ -189,14 +189,14 @@ class Game {
             let healthBar = document.querySelector("#healthbar");
             updateBar(healthBar, this.livesLeft);
             if (this.livesLeft > 0) {
-                alert(`You're out of money!\n` +
-                `You have ${this.livesLeft} lives remaining.\n`);
+                alert(`Jste bez peněz!\n` +
+                `Máte ${this.livesLeft} zbývající životy, bank byl doplněn.\n` );
                 this.playerBalance = this.initialBet;
                 this.deck.shuffleNew();
             }
             else {
-                alert(`You're out of money and lives!\n` +
-                `Please reset the game if you want to play again.\n`);
+                alert(`Jste bez peněz i životů!\n` +
+                `Prosím použijte tlačítko restart pro novou hru.\n`);
             }
         }
         
@@ -316,7 +316,7 @@ function game() {
         let buyInField = document.querySelector('#buy-in-field');
         let buyInInput = parseInt(buyInField.value);
         if (Number.isNaN(buyInInput) || buyInInput < 10) {
-            alert("Please enter a numberic bet above 10.")
+            alert("Prosím zadejte číslo větší než 10.")
             return;
         }
         game.playerBalance = buyInInput;
@@ -331,7 +331,7 @@ function game() {
         let betField = document.querySelector('#bet-field');
         let betInput = parseInt(betField.value);
         if (Number.isNaN(betInput) || betInput < 1 || betInput > game.playerBalance) {
-            alert("Please enter a numeric bet above 1 that you can afford.")
+            alert("Prosím zadejte numerickou částku, kterou si můžete dovolit.")
             return;
         }
         game.currBet = betInput;

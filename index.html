@@ -13,39 +13,39 @@
     </div>
     <div class="game">
         <div class="buy-in">
-            <label for="buy-in">How much do you want to gamble away today?</label>
+            <label for="buy-in">Kolik chcete vsadit?</label>
             <input type="number" name="buy-in" id="buy-in-field" class="resetable" min="10" step="1" autofocus>
-            <button type="button" id="buy-in-button">start the game</button>
+            <button type="button" id="buy-in-button">začít hru</button>
         </div>
         <div class="playing" style="display: none">
             <div class="lives">
-                <div>Lives left: </div>
+                <div>Zbývající životy: </div>
                 <canvas id="healthbar" width="300" height="50"></canvas>
             </div>
             <div class="balance">
-                <div>Current balance: </div>
+                <div>Stav účtu: </div>
                 <div id="curr-balance" class="resetable">0</div>
             </div>
             <div class="round">
                 <div class="bet">
-                        <label for="bet">How much do you want to bet?</label>
+                        <label for="bet">Kolik si vsadíte?</label>
                         <div class="bet-input">
                             <input type="number" name="bet" id="bet-field" class="resetable" min="1" step="1" autofocus>
-                            <button type="button" id="bet-button">bet</button>
+                            <button type="button" id="bet-button">vsadit</button>
                         </div>
-                        <div>Current bet:</div>
+                        <div>Současná sázka:</div>
                         <div id="curr-bet" class="resetable">0</div>
                 </div>
                 <div class="sum">
-                    <div>Current card value sum:</div>
+                    <div>Součet hodnot karet:</div>
                     <div id="player-sum" class="resetable">0</div>
                 </div>
                 <div class="play-buttons">
-                    <button id="hit-button">hit</button>
-                    <button id="stay-button">stay</button>
+                    <button id="hit-button">další</button>
+                    <button id="stay-button">stačí</button>
                 </div>
                 <div class="cards">
-                    <div>Current cards:</div>
+                    <div>Tažené karty:</div>
                     <div id="player-cards" class="resetable">0</div>
                 </div>
             </div>
