@@ -58,7 +58,7 @@ class Deck {
         });
     }
 
-    print() {
+    printConsole() {
         this.ordered.forEach(card => {
             console.log(card.toString);
         })
@@ -98,6 +98,20 @@ function resetElems() {
     }
 }
 
+function cardsToString(cards) {
+    let retStr = "";
+    let n = cards.length;
+    for (let i = 0; i < n - 1; i++) {
+        retStr += cards[i].toString() + ", ";
+    }
+
+    if (n != 0) {
+        retStr += cards[n - 1].toString();
+    }
+
+    return retStr;
+}
+
 class Game {
     constructor() {
         this.initialBet = 0;
@@ -116,6 +130,8 @@ class Game {
     hit() {
         let card = this.deck.dealCard();
         this.playerCards.push(card);
+        console.log(document.querySelector('#player-cards'));
+        document.querySelector('#player-cards').textContent = cardsToString(this.playerCards); 
         this.playerScore += card.value;
         document.querySelector('#player-sum').textContent = this.playerScore;
 
@@ -126,6 +142,7 @@ class Game {
 
     stay() {
         this.botScore = this.botPlay();
+
         let resultStr = "";
         if (this.playerScore > 21) {
             resultStr = "You went bust!"
@@ -148,20 +165,6 @@ class Game {
     }
 
     alertRoundResult(resultStr) {
-        function cardsToString(cards) {
-            let retStr = "";
-            let n = cards.length;
-            for (let i = 0; i < n - 1; i++) {
-                retStr += cards[i].toString() + ", ";
-            }
-
-            if (n != 0) {
-                retStr += cards[n - 1].toString();
-            }
-
-            return retStr;
-        }
-
         alert(`${resultStr}\n` +
               `Your score is ${this.playerScore}, bot scored ${this.botScore}\n` +
               `You cards: ${cardsToString(this.playerCards)}\n` +
@@ -185,8 +188,6 @@ class Game {
             }
         }
         
-
-        document.querySelector('#lives').textContent = this.livesLeft;
         document.querySelector('#curr-balance').textContent = this.playerBalance;
 
         //reset counter vars for next round

@@ -20,7 +20,6 @@
         <div class="playing" style="display: none">
             <div class="lives">
                 <div>Lives left: </div>
-                <div id="lives" class="resetable">3</div>
                 <canvas id="healthbar" width="300" height="50"></canvas>
             </div>
             <div class="balance">
@@ -30,8 +29,10 @@
             <div class="round">
                 <div class="bet">
                         <label for="bet">How much do you want to bet?</label>
-                        <input type="number" name="bet" id="bet-field" class="resetable" min="1" step="1" autofocus>
-                        <button type="button" id="bet-button">bet</button>
+                        <div class="bet-input">
+                            <input type="number" name="bet" id="bet-field" class="resetable" min="1" step="1" autofocus>
+                            <button type="button" id="bet-button">bet</button>
+                        </div>
                         <div>Current bet:</div>
                         <div id="curr-bet" class="resetable">0</div>
                 </div>
@@ -42,6 +43,10 @@
                 <div class="play-buttons">
                     <button id="hit-button">hit</button>
                     <button id="stay-button">stay</button>
+                </div>
+                <div class="cards">
+                    <div>Current cards:</div>
+                    <div id="player-cards" class="resetable">0</div>
                 </div>
             </div>
         </div>
