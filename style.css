@@ -15,7 +15,6 @@ body, .bet, .buy-in, .playing, .round, .sum, .cards {
     flex-direction: column;
     font-family: 'Courier New', Courier, monospace;
     background-color: rgb(255, 252, 238);
-    max-width: 600px;
 }
 
 .playing {

@@ -61,6 +61,16 @@ class CardStack {
     
         return retStr;
     }
+
+    toStringWithBreak() {
+        let retStr = "";
+        let n = this.cards.length;
+        for (let i = 0; i < n; i++) {
+            retStr += `${this.cards[i].toString()} (${this.cards[i].value})<br/>`;
+        }
+
+        return retStr;
+    }
 }
 
 class Hand extends CardStack {
@@ -130,7 +140,7 @@ class Game {
 
     hit() {
         this.playerCards.add(this.deck.dealCard());
-        document.querySelector('#player-cards').textContent = this.playerCards.toString(); 
+        document.querySelector('#player-cards').innerHTML = this.playerCards.toStringWithBreak(); 
         document.querySelector('#player-sum').textContent = this.playerCards.sum;
 
         console.log(this.deck);
