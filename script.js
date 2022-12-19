@@ -43,12 +43,44 @@ class Card {
     }
 }
 
-class Deck {
+class CardStack {
     constructor() {
-        this.ordered = [];
-        this.shuffled = [];
+        this.cards = [];
+    }
+
+    toString() {
+        let retStr = "";
+        let n = this.cards.length;
+        for (let i = 0; i < n - 1; i++) {
+            retStr += this.cards[i].toString() + ", ";
+        }
+    
+        if (n != 0) {
+            retStr += this.cards[n - 1].toString();
+        }
+    
+        return retStr;
+    }
+}
+
+class Hand extends CardStack {
+    constructor() {
+        super();
+        this.sum = 0;
+    }
+
+    add(card) {
+        this.cards.push(card);
+        this.sum += card.value;
+    }    
+}
+
+class Deck extends CardStack {
+    constructor() {
+        super();
 
         //generate ordered deck
+        this.ordered = [];
         SUIT.forEach(suit => {
             let i = 0;
             RANK.forEach(rank => {
@@ -56,52 +88,31 @@ class Deck {
                 i++;
             })
         });
+
+        console.log(this.ordered);
     }
 
-    printConsole() {
-        this.ordered.forEach(card => {
-            console.log(card.toString);
-        })
-    }
-
-    shuffle() {
+    shuffleNew() {
         //uses the Fisher-Yates shuffle algorhitm
         //traverse array &
         //swap element at current position with random one not yet visited
-        this.shuffled = this.ordered;
-        for(let i = this.ordered.length - 1; i > 0; i--) {
+        this.cards = [...this.ordered];
+        for(let i = this.cards.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
 
-            let tmpSwap = this.shuffled[i];
-            this.shuffled[i] = this.shuffled[j];
-            this.shuffled[j] = tmpSwap;
+            let tmpSwap = this.cards[i];
+            this.cards[i] = this.cards[j];
+            this.cards[j] = tmpSwap;
         }
     }
 
     dealCard() {
-        if (this.shuffled.length == 0) {
-            this.shuffle();
+        if (this.cards.length == 0) {
+            console.log("triggered");
+            this.shuffleNew();
         }
-        return this.shuffled.pop();
+        return this.cards.pop();
     }
-}
-
-function resetElems() {
-
-}
-
-function cardsToString(cards) {
-    let retStr = "";
-    let n = cards.length;
-    for (let i = 0; i < n - 1; i++) {
-        retStr += cards[i].toString() + ", ";
-    }
-
-    if (n != 0) {
-        retStr += cards[n - 1].toString();
-    }
-
-    return retStr;
 }
 
 class Game {
@@ -110,41 +121,40 @@ class Game {
         this.playerBalance = 0;
         this.livesLeft = 3;
 
-        this.playerScore = 0;
-        this.botScore = 0;
         this.currBet = 0;
 
         this.deck = new Deck();
-        this.playerCards = [];
-        this.botCards = [];
+        this.playerCards = new Hand();
+        this.botCards = new Hand();
     }
 
     hit() {
-        let card = this.deck.dealCard();
-        this.playerCards.push(card);
-        console.log(document.querySelector('#player-cards'));
-        document.querySelector('#player-cards').textContent = cardsToString(this.playerCards); 
-        this.playerScore += card.value;
-        document.querySelector('#player-sum').textContent = this.playerScore;
+        this.playerCards.add(this.deck.dealCard());
+        document.querySelector('#player-cards').textContent = this.playerCards.toString(); 
+        document.querySelector('#player-sum').textContent = this.playerCards.sum;
 
-        if(this.playerScore > 21) {
+        console.log(this.deck);
+        console.log(this.playerCards);
+
+        if(this.playerCards.sum > 21) {
             this.stay();
         }
     }
 
     stay() {
-        this.botScore = this.botPlay();
+        this.botPlay();
 
         let resultStr = "";
-        if (this.playerScore > 21) {
+        if (this.playerCards.sum > 21) {
             resultStr = "You went bust!"
             this.playerBalance = this.playerBalance - this.currBet;
         }
-        else if (this.playerScore > this.botScore || this.botScore > 21) {
+        else if (this.playerCards.sum > this.botCards.sum
+                 || this.botCards.sum > 21) {
             resultStr = "YOU WIN!!!";
             this.playerBalance = this.playerBalance + this.currBet;
         }
-        else if (this.playerScore < this.botScore) {
+        else if (this.playerCards.sum < this.botCards.sum) {
             resultStr = "You lost...";
             this.playerBalance = this.playerBalance - this.currBet;
         }
@@ -158,10 +168,9 @@ class Game {
 
     alertRoundResult(resultStr) {
         alert(`${resultStr}\n` +
-              `Your score is ${this.playerScore}, bot scored ${this.botScore}\n` +
-              `You cards: ${cardsToString(this.playerCards)}\n` +
-              `Bot cards: ${cardsToString(this.botCards)}\n`);
-        console.log(this.playerBalance);
+              `Your score is ${this.playerCards.sum}, bot scored ${this.botCards.sum}\n` +
+              `You cards: ${this.playerCards.toString()}\n` +
+              `Bot cards: ${this.botCards.toString()}\n`);
     }
 
     nextRound() {
@@ -173,6 +182,7 @@ class Game {
                 alert(`You're out of money!\n` +
                 `You have ${this.livesLeft} lives remaining.\n`);
                 this.playerBalance = this.initialBet;
+                this.deck.shuffleNew();
             }
             else {
                 alert(`You're out of money and lives!\n` +
@@ -183,11 +193,9 @@ class Game {
         document.querySelector('#curr-balance').textContent = this.playerBalance;
 
         //reset counter vars for next round
-        this.deck.shuffle();
-        this.playerCards = [];
-        this.botCards = [];
-        this.playerScore = 0;
-        this.botScore = 0;
+        this.playerCards = new Hand();
+        this.botCards = new Hand();
+        
         document.querySelectorAll('.round .resetable').forEach(elem => {
             elem.textContent = "0";
         });
@@ -197,15 +205,9 @@ class Game {
     }
 
     botPlay() {
-        let card = this.deck.dealCard();
-        let sum = card.value;
-        this.botCards.push(card);
-        while (sum < 17) {
-            card = this.deck.dealCard();
-            this.botCards.push(card);
-            sum += card.value;
+        while (this.botCards.sum < 17) {
+            this.botCards.add(this.deck.dealCard());
         }
-        return sum;
     }
 }
 
@@ -348,6 +350,10 @@ function game() {
         if (document.querySelector('.buy-in').style.display == 'none') {
             toggleDisplay(document.querySelector('.buy-in'));
             toggleDisplay(document.querySelector('.playing'));
+        }
+
+        if (betButton.hasAttribute('disabled')) {
+            toggleBetPlayButtons();
         }
 
         game = new Game();
