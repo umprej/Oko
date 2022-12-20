@@ -1,6 +1,7 @@
 const VALUES = [1, 1, 2, 7, 8, 9, 10, 11];
 const SUIT = ["kule", "listy", "žaludy", "srdce"];
 const RANK = ["svršek", "spodek", "král", "sedma", "osmička", "devítka", "desítka", "eso"];
+const LIVES_MAX = 3;
 
 class Card {
     constructor(suit, rank, value) {
@@ -98,8 +99,6 @@ class Deck extends CardStack {
                 i++;
             })
         });
-
-        console.log(this.ordered);
     }
 
     shuffleNew() {
@@ -118,7 +117,6 @@ class Deck extends CardStack {
 
     dealCard() {
         if (this.cards.length == 0) {
-            console.log("triggered");
             this.shuffleNew();
         }
         return this.cards.pop();
@@ -129,7 +127,7 @@ class Game {
     constructor() {
         this.initialBet = 0;
         this.playerBalance = 0;
-        this.livesLeft = 3;
+        this.livesLeft = LIVES_MAX;
 
         this.currBet = 0;
 
@@ -142,9 +140,6 @@ class Game {
         this.playerCards.add(this.deck.dealCard());
         document.querySelector('#player-cards').innerHTML = this.playerCards.toStringWithBreak(); 
         document.querySelector('#player-sum').textContent = this.playerCards.sum;
-
-        console.log(this.deck);
-        console.log(this.playerCards);
 
         if(this.playerCards.sum > 21) {
             this.stay();
@@ -223,16 +218,19 @@ class Game {
 
 function toggleBetPlayButtons() {
     let betButton = document.querySelector('#bet-button');
+    let leaveButton = document.querySelector('#leave-button');
     let hitButton = document.querySelector('#hit-button');
     let stayButton = document.querySelector('#stay-button');
     
     if (betButton.hasAttribute('disabled')) {
         betButton.removeAttribute('disabled');
+        leaveButton.removeAttribute('disabled');
         hitButton.setAttribute('disabled', '');
         stayButton.setAttribute('disabled', '');
     }
     else {
         betButton.setAttribute('disabled', '');
+        leaveButton.setAttribute('disabled', '');
         hitButton.removeAttribute('disabled');
         stayButton.removeAttribute('disabled');
     }
@@ -300,6 +298,7 @@ function game() {
     let game = new Game();
     
     let buyInButton = document.querySelector('#buy-in-button');
+    let leaveButton = document.querySelector('#leave-button');
     let betButton = document.querySelector('#bet-button');
     let hitButton = document.querySelector('#hit-button');
     let stayButton = document.querySelector('#stay-button');
@@ -311,7 +310,6 @@ function game() {
     let healthBar = document.querySelector("#healthbar");
     updateBar(healthBar, game.livesLeft);
 
-    //buy in
     buyInButton.addEventListener('click', (event) => {
         let buyInField = document.querySelector('#buy-in-field');
         let buyInInput = parseInt(buyInField.value);
@@ -326,7 +324,18 @@ function game() {
         toggleDisplay(document.querySelector('.playing'));
     })
 
-    //bet
+    leaveButton.addEventListener('click', (event) => {
+        if (confirm("Opravdu chcete přestat hrát?")) {
+            alert(`Děkujeme za hru.\n` +
+            `Začal jste s rozpočtem ${game.initialBet * (LIVES_MAX)} a odcházíte s ${game.playerBalance + game.initialBet * (game.livesLeft - 1)}.\n`);
+        }
+
+        betButton.setAttribute('disabled', '');
+        leaveButton.setAttribute('disabled', '');
+        document.querySelector('#curr-balance').innerHTML = "<i><b>MONEY WITHDRAWN</b></i>";
+
+    })
+
     betButton.addEventListener('click', (event) => {
         let betField = document.querySelector('#bet-field');
         let betInput = parseInt(betField.value);
@@ -340,17 +349,14 @@ function game() {
         game.hit();
     });
 
-    //hit
     hitButton.addEventListener('click', (event) => {
         game.hit();
     });
 
-    //stay
     stayButton.addEventListener('click', (event) => {
         game.stay();
     });
 
-    //reset
     resetButton.addEventListener('click', (event) => {
         document.querySelectorAll('div.resetable').forEach(elem =>
             elem.textContent = 0);

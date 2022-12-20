@@ -13,7 +13,8 @@
     </div>
     <div class="game">
         <div class="buy-in">
-            <label for="buy-in">Kolik chcete vsadit?</label>
+            <div>Hra je Oko na tři kola.</div>
+            <label for="buy-in">Kolik chcete vsadit na každé kolo?</label>
             <input type="number" name="buy-in" id="buy-in-field" class="resetable" min="10" step="1" autofocus>
             <button type="button" id="buy-in-button">začít hru</button>
         </div>
@@ -26,6 +27,7 @@
                 <div>Stav účtu: </div>
                 <div id="curr-balance" class="resetable">0</div>
             </div>
+            <button id="leave-button">odejít</button>
             <div class="round">
                 <div class="bet">
                         <label for="bet">Kolik si vsadíte?</label>
